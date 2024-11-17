@@ -1,0 +1,41 @@
+class Producto {
+    constructor(
+        public nombre: string,
+        public precio: number
+    ) {}
+}
+
+class CajaRegistradora {
+    private productos: Producto[] = [];
+    private total: number = 0;
+
+    cobrar(producto: Producto): void {
+        this.productos.push(producto);
+        this.total += producto.precio;
+        console.log(`Producto agregado: ${producto.nombre} - $${producto.precio}`);
+    }
+
+    imprimir_ticket(): void {
+        console.log('\n=== TICKET DE COMPRA ===');
+        console.log('Productos:');
+        this.productos.forEach(producto => {
+            console.log(`${producto.nombre}: $${producto.precio}`);
+        });
+        console.log('----------------------');
+        console.log(`TOTAL: $${this.total.toFixed(2)}`);
+        console.log('======================\n');
+    }
+}
+
+const caja = new CajaRegistradora();
+
+const productos = [
+    new Producto('Arroz', 2.50),
+    new Producto('Leche', 1.80),
+    new Producto('Pan', 1.20),
+    new Producto('Huevos', 3.00)
+];
+
+productos.forEach(producto => caja.cobrar(producto));
+
+caja.imprimir_ticket();

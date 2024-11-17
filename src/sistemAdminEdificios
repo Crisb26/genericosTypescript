@@ -1,0 +1,85 @@
+class Propietario {
+    constructor(
+        public nombre: string,
+        public email: string
+    ) {}
+}
+
+class Apartamento {
+    constructor(
+        public numero: number,
+        public habitaciones: number,
+        public metros: number,
+        public propietarios: Propietario[] = []
+    ) {}
+}
+
+class Edificio {
+    private apartamentos: Apartamento[] = [];
+
+    constructor(public direccion: string) {}
+
+    agregar_apartamento(apartamento: Apartamento): void {
+        if (!this.apartamentos.some(apt => apt.numero === apartamento.numero)) {
+            this.apartamentos.push(apartamento);
+            console.log(`Apartamento ${apartamento.numero} agregado exitosamente`);
+        } else {
+            console.log(`El apartamento ${apartamento.numero} ya existe`);
+        }
+    }
+
+    eliminar_apartamento(numero: number): void {
+        const index = this.apartamentos.findIndex(apt => apt.numero === numero);
+        if (index !== -1) {
+            this.apartamentos.splice(index, 1);
+            console.log(`Apartamento ${numero} eliminado exitosamente`);
+        } else {
+            console.log(`Apartamento ${numero} no encontrado`);
+        }
+    }
+
+    buscar_apartamento(numero: number): Apartamento | undefined {
+        return this.apartamentos.find(apt => apt.numero === numero);
+    }
+
+    agregar_propietario(numero: number, propietario: Propietario): void {
+        const apartamento = this.buscar_apartamento(numero);
+        if (apartamento) {
+            apartamento.propietarios.push(propietario);
+            console.log(`Propietario ${propietario.nombre} agregado al apartamento ${numero}`);
+        } else {
+            console.log(`Apartamento ${numero} no encontrado`);
+        }
+    }
+
+    cobrar_renta(): void {
+        console.log('\n=== COBRO DE RENTAS ===');
+        this.apartamentos.forEach(apt => {
+            apt.propietarios.forEach(prop => {
+                console.log(`Enviando cobro de renta a ${prop.nombre} (${prop.email}) - Apartamento ${apt.numero}`);
+            });
+        });
+        console.log('=====================\n');
+    }
+}
+
+const edificio = new Edificio('Av. Principal #123');
+
+const apt1 = new Apartamento(101, 2, 75);
+const apt2 = new Apartamento(102, 3, 90);
+
+edificio.agregar_apartamento(apt1);
+edificio.agregar_apartamento(apt2);
+
+const prop1 = new Propietario('Carlos Alberto Estrada Bohorques', 'carlos.alberto.estrada@gmail.com');
+const prop2 = new Propietario('Angela Peña', 'angela.pena@hotmail.com');
+
+edificio.agregar_propietario(101, prop1);
+edificio.agregar_propietario(102, prop2);
+
+console.log('Buscando apartamento 101:');
+console.log(edificio.buscar_apartamento(101));
+
+edificio.cobrar_renta();
+
+edificio.eliminar_apartamento(101);

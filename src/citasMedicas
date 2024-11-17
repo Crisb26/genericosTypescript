@@ -1,0 +1,101 @@
+class Cita {
+    constructor(
+        public paciente: string,
+        public doctor: string,
+        public fecha: Date,
+        public hora: string,
+        public motivo: string
+    ) {}
+}
+
+class SistemaCitas {
+    private citas: Cita[] = [];
+
+    constructor() {
+        this.citas = [
+            new Cita(
+                'Carlos Alberto Estrada Bohorques',
+                'Dr. Arle Morales Ortiz',
+                new Date('2024-11-18'),
+                '09:00',
+                'Control rutinario'
+            ),
+            new Cita(
+                'Angela Peña',
+                'Dr. Juan Pérez',
+                new Date('2024-11-17'),
+                '10:30',
+                'Consulta general'
+            ),
+            new Cita(
+                'Daniel Gonzales Suarez',
+                'Dr. María González',
+                new Date('2024-11-17'),
+                '11:00',
+                'Seguimiento'
+            )
+        ];
+    }
+
+    agregar_cita(cita: Cita): void {
+        this.citas.push(cita);
+        console.log('Cita agregada exitosamente');
+    }
+
+    eliminar_cita(cita: Cita): void {
+        const index = this.citas.findIndex(
+            c => c.paciente === cita.paciente && 
+                c.fecha.getTime() === cita.fecha.getTime() && 
+                c.hora === cita.hora
+        );
+        if (index !== -1) {
+            this.citas.splice(index, 1);
+            console.log('Cita eliminada exitosamente');
+        } else {
+            console.log('Cita no encontrada');
+        }
+    }
+
+    buscar_cita(doctor: string): Cita[] {
+        return this.citas.filter(cita => cita.doctor === doctor);
+    }
+
+    citas_hoy(): Cita[] {
+        const hoy = new Date();
+        return this.citas.filter(cita => 
+            cita.fecha.getDate() === hoy.getDate() &&
+            cita.fecha.getMonth() === hoy.getMonth() &&
+            cita.fecha.getFullYear() === hoy.getFullYear()
+        );
+    }
+
+    citas_fecha(fecha: Date): Cita[] {
+        return this.citas.filter(cita => 
+            cita.fecha.getDate() === fecha.getDate() &&
+            cita.fecha.getMonth() === fecha.getMonth() &&
+            cita.fecha.getFullYear() === fecha.getFullYear()
+        );
+    }
+}
+
+const sistema = new SistemaCitas();
+
+const nuevaCita = new Cita(
+    'Valentina Rodriguez Palacios',
+    'Dr. Arle Morales Ortiz',
+    new Date('2024-11-17'),
+    '14:00',
+    'Primera consulta'
+);
+sistema.agregar_cita(nuevaCita);
+
+console.log('Citas de Dr. Arle Morales Ortiz:');
+console.log(sistema.buscar_cita('Dr. Arle Morales Ortiz'));
+
+console.log('Citas de hoy:');
+console.log(sistema.citas_hoy());
+
+console.log('Citas del 17 de noviembre:');
+console.log(sistema.citas_fecha(new Date('2024-11-17')));
+
+sistema.eliminar_cita(nuevaCita);
